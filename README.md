@@ -1,8 +1,16 @@
-# Customer Churn & Retention Analysis
+<h1 align="center">Customer Churn &amp; Retention Analysis</h1>
+
+<p align="center"><b>Which customers leave, and where should retention effort go?</b></p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/SQL-4479A1?logo=mysql&logoColor=white" alt="SQL">
+  <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/pandas-150458?logo=pandas&logoColor=white" alt="pandas">
+  <img src="https://img.shields.io/badge/Matplotlib-11557C" alt="Matplotlib">
+  <img src="https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white" alt="Jupyter">
+</p>
 
 Churn analysis on the Telco Customer Churn dataset. SQL scripts and Python show which customers leave and what they have in common, and a 3-page dashboard drawn in Python (matplotlib) summarises the results.
-
-**Business question:** which customers are most likely to churn, and where should retention effort go?
 
 ## Key findings
 
