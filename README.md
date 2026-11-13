@@ -1,373 +1,74 @@
 # Customer Churn & Retention Analysis
 
-End-to-end customer analytics and business intelligence project focused on analyzing customer churn behavior, retention trends, customer segmentation, and business risk indicators using SQL, Python, and Power BI-style dashboard reporting.
+Churn analysis on the Telco Customer Churn dataset. SQL scripts and Python show which customers leave and what they have in common, and a 3-page dashboard drawn in Python (matplotlib) summarises the results.
 
----
+**Business question:** which customers are most likely to churn, and where should retention effort go?
 
-# Project Overview
+## Key findings
 
-This project simulates a real-world telecom customer analytics workflow followed by data analysts and business intelligence teams to identify:
+Computed from `datasets/cleaned/churn_summary.csv`: 7,032 customers, 1,869 churned (26.6%), 73.4% retained.
 
-- customer churn drivers
-- retention opportunities
-- high-risk customer segments
-- revenue retention insights
-- contract performance
-- customer lifetime behavior
+| Driver | Finding |
+| --- | --- |
+| Contract | Month-to-month customers churn at 42.7%, one-year at 11.3%, two-year at 2.8% |
+| Tenure | Customers in their first year churn at 47.7%, customers with 4+ years at 9.5% |
+| Monthly charges | High (70 and above) 35.5%, medium 23.7%, low (under 35) 10.9% |
+| Payment method | Electronic check 45.3%, other methods 15 to 19% |
+| Revenue | Churned customers pay $74.4 a month on average against $61.3 for retained ones, and make up 30.5% of monthly revenue |
+| Highest risk | 814 customers with risk score 5 (month-to-month, charges above 70, tenure under 12 months) churn at 69.5% |
 
-The project combines:
-- SQL analytics
-- Python data analysis
-- KPI reporting
-- dashboard visualization
-- business storytelling
-- strategic recommendations
+Recommendations are in [`docs/business_insights.md`](docs/business_insights.md): move month-to-month customers to longer contracts, improve onboarding in year one, and target customers with a high risk score.
 
----
+## Dashboard
 
-# Business Problem
+Three pages drawn in Python (matplotlib):
 
-Customer churn directly impacts business revenue, customer lifetime value, and operational growth.
+| Executive overview | Churn analysis | Retention insights |
+| --- | --- | --- |
+| ![Executive overview](dashboard/executive_overview.png) | ![Churn analysis](dashboard/churn_analysis.png) | ![Retention insights](dashboard/retention_insights.png) |
 
-This project helps answer critical business questions such as:
+## What is in the repo
 
-- Which customers are most likely to churn?
-- Which contract types have the highest churn rates?
-- How do monthly charges affect retention?
-- Which payment methods correlate with churn?
-- Which customer segments are high-risk?
-- How can businesses improve customer retention?
-
----
-
-# Tech Stack
-
-| Category | Tools & Technologies |
-|----------|----------------------|
-| Programming | Python |
-| Data Analysis | Pandas, NumPy |
-| Visualization | Matplotlib, Seaborn |
-| Querying | SQL |
-| Business Intelligence | Power BI-style Dashboard Reporting |
-| BI Modeling | DAX Measures |
-| Development Environment | VS Code, Jupyter Notebook |
-| Version Control | Git & GitHub |
-
----
-
-# Project Architecture
-
-```bash
-customer-churn-retention-analysis/
-│
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
+```text
+.
 ├── datasets/
-│   ├── raw/
-│   │   └── customer_churn.csv
-│   │
-│   └── cleaned/
-│       ├── cleaned_churn_data.csv
-│       ├── churn_summary.csv
-│       └── retention_metrics.csv
-│
-├── sql/
-│   ├── 01_data_cleaning.sql
-│   ├── 02_customer_segmentation.sql
-│   ├── 03_churn_analysis.sql
-│   ├── 04_retention_metrics.sql
-│   └── 05_business_questions.sql
-│
-├── python/
-│   ├── churn_data_cleaning.ipynb
-│   ├── exploratory_churn_analysis.ipynb
-│   ├── retention_analysis.ipynb
-│   └── dashboard_visuals.ipynb
-│
-├── powerbi/
-│   ├── churn_dashboard.pbix
-│   ├── dax_measures.md
-│   ├── README.md
-│   ├── business_insights.md
-│   │
-│   └── dashboard_screenshots/
-│       ├── executive_overview.png
-│       ├── churn_analysis.png
-│       └── retention_insights.png
-│
-├── presentation/
-│   └── customer_retention_insights.pdf
-│
-└── docs/
-    ├── data_dictionary.md
-    └── project_workflow.md
+│   ├── raw/customer_churn.csv              7,043 customers, 21 columns
+│   └── cleaned/                            cleaned data, churn summary with risk score, retention metrics
+├── sql/                                    5 scripts, from cleaning to business questions
+├── notebooks/01_churn_data_cleaning.ipynb  cleaning and churn encoding
+├── dashboard/                              the 3 dashboard images
+├── docs/                                   data dictionary, business insights, DAX measures
+└── requirements.txt
 ```
 
----
+## SQL scripts
 
-# Dataset Information
+| Script | Purpose |
+| --- | --- |
+| `01_data_cleaning.sql` | Row counts, blank `TotalCharges`, duplicate customer IDs, churn, contract and internet service distribution |
+| `02_customer_segmentation.sql` | Customers by gender, senior status, contract and payment method, average charges and tenure, high-value customers |
+| `03_churn_analysis.sql` | Overall churn rate, churn by contract, internet service, payment method and tenure group, highest-charge customers |
+| `04_retention_metrics.sql` | Retention rate, retained and churned revenue, average lifetime, long-term customers |
+| `05_business_questions.sql` | Highest-churn contract, payment method with most churners, best-retaining tenure group, high-risk segments, charges by churn status |
 
-Dataset Used:
-- Telco Customer Churn Dataset
+The scripts expect a table called `customer_churn` loaded from the raw CSV and use MySQL syntax.
 
-Dataset includes:
-- customer demographics
-- subscription details
-- internet services
-- billing information
-- payment methods
-- contract types
-- churn indicators
-- customer tenure metrics
+## Data cleaning
 
----
+- 11 of the 7,043 raw rows have a blank `TotalCharges` and are dropped, which leaves 7,032 customers.
+- Added `tenure_group`, `monthly_charge_group` and `Churn_Encoded`. Every column is described in [`docs/data_dictionary.md`](docs/data_dictionary.md).
 
-# Project Workflow
+## DAX measures
 
-## 1. Data Collection
-Imported telecom customer churn dataset for business analytics and retention analysis.
+[`docs/dax_measures.md`](docs/dax_measures.md) lists 11 DAX measures for a Power BI model: churn and retention rate, churned and retained revenue, high-risk customers. There is no Power BI file in this repo.
 
-## 2. Data Cleaning
-Performed:
-- missing value handling
-- duplicate removal
-- datatype conversion
-- feature engineering
-- churn encoding
+## Run the notebook
 
-## 3. Exploratory Data Analysis
-Analyzed:
-- churn distribution
-- customer demographics
-- contract performance
-- payment behavior
-- tenure analysis
-- customer segmentation
-
-## 4. Retention Analysis
-Investigated:
-- retention KPIs
-- customer lifetime metrics
-- churn risk scoring
-- revenue retention analysis
-- high-risk customer groups
-
-## 5. SQL Analytics
-Developed:
-- churn KPI queries
-- retention metrics
-- customer segmentation analysis
-- business problem-solving queries
-- advanced customer analytics
-
-## 6. Dashboard Reporting
-Created executive-style dashboard visuals for:
-- KPI monitoring
-- churn analysis
-- retention insights
-- customer segmentation
-- business intelligence reporting
-
-## 7. Business Recommendations
-Generated strategic recommendations to improve:
-- customer retention
-- pricing strategies
-- customer engagement
-- churn reduction
-- operational efficiency
-
----
-
-# SQL Analysis
-
-The SQL section includes:
-
-- data cleaning workflows
-- customer segmentation analysis
-- churn KPI reporting
-- retention metrics
-- advanced business problem-solving
-
-Key SQL concepts used:
-- aggregations
-- CASE statements
-- filtering
-- grouping
-- KPI calculations
-- customer segmentation logic
-
----
-
-# Python Analysis
-
-Python notebooks include:
-
-## churn_data_cleaning.ipynb
-- data preprocessing
-- datatype fixing
-- feature engineering
-- churn encoding
-
-## exploratory_churn_analysis.ipynb
-- churn distribution analysis
-- demographic analysis
-- contract analysis
-- payment method analysis
-- customer segmentation
-
-## retention_analysis.ipynb
-- retention KPIs
-- customer lifetime analysis
-- churn risk scoring
-- retention opportunity analysis
-
-## dashboard_visuals.ipynb
-- executive dashboard generation
-- churn dashboard visuals
-- retention dashboard visuals
-- KPI visualization
-
----
-
-# Power BI & Dashboard Reporting
-
-The project includes Power BI-style dashboard reporting workflows and KPI modeling.
-
-Dashboard sections include:
-
-## Executive Overview
-High-level customer churn KPIs and retention metrics.
-
-## Churn Analysis
-Analysis of churn behavior across contracts, payment methods, tenure groups, and customer segments.
-
-## Retention Insights
-Customer retention analysis, churn risk scoring, and business opportunity analysis.
-
----
-
-# Power BI DAX Measures
-
-The project also includes:
-- churn KPIs
-- retention KPIs
-- revenue calculations
-- customer risk metrics
-- DAX business measures
-
-Located in:
-
-```bash
-powerbi/dax_measures.md
+```sh
+pip install -r requirements.txt
+jupyter notebook notebooks/01_churn_data_cleaning.ipynb
 ```
 
----
+## Author
 
-# Dashboard Screenshots
-
-## Executive Overview
-
-![Executive Overview](powerbi/dashboard_screenshots/executive_overview.png)
-
----
-
-## Churn Analysis
-
-![Churn Analysis](powerbi/dashboard_screenshots/churn_analysis.png)
-
----
-
-## Retention Insights
-
-![Retention Insights](powerbi/dashboard_screenshots/retention_insights.png)
-
----
-
-# Key Business Insights
-
-## Contract Impact
-Month-to-month customers demonstrated significantly higher churn rates compared to long-term contract customers.
-
-## Customer Tenure
-Customers with shorter tenure showed elevated churn behavior and lower retention rates.
-
-## Pricing Impact
-Higher monthly charges increased churn probability.
-
-## Payment Method Behavior
-Electronic check users demonstrated higher churn risk.
-
-## Customer Retention
-Long-term contracts improved customer retention significantly.
-
----
-
-# Strategic Recommendations
-
-## Encourage Long-Term Contracts
-Offer incentives and discounts for annual or multi-year subscriptions.
-
-## Improve Early Customer Engagement
-Develop onboarding and loyalty programs for new customers.
-
-## Retention Campaigns
-Target high-risk customer groups with proactive retention strategies.
-
-## Pricing Optimization
-Review pricing structures for high monthly charge customers.
-
-## Continuous KPI Monitoring
-Implement dashboard-based KPI tracking for churn monitoring and retention analytics.
-
----
-
-# Skills Demonstrated
-
-- SQL Analytics
-- Python Data Analysis
-- Exploratory Data Analysis (EDA)
-- Customer Segmentation
-- Retention Analytics
-- Churn Analysis
-- KPI Reporting
-- Dashboard Design
-- Business Intelligence Reporting
-- DAX Measures
-- Business Storytelling
-- Strategic Analytics
-
----
-
-# Future Improvements
-
-Potential future enhancements:
-
-- Machine Learning churn prediction
-- Customer lifetime value forecasting
-- Automated ETL pipelines
-- Interactive dashboards
-- Predictive retention modeling
-- Advanced customer analytics
-
----
-
-# Author
-
-## Dinesh Kumar Gudiputi
-
-- LinkedIn: https://linkedin.com/in/dineshkumargudiputi
-- GitHub: https://github.com/dinesh-kumar-gudiputi
-
----
-
-# Portfolio Project
-
-This project was developed as part of a professional data analytics portfolio focused on:
-- customer analytics
-- business intelligence
-- retention analysis
-- churn analytics
-- dashboard reporting
-- end-to-end analytics workflows
+Dinesh Kumar Gudiputi, [LinkedIn](https://www.linkedin.com/in/dineshkumargudiputi/), [GitHub](https://github.com/dinesh-kumar-gudiputi)

@@ -34,6 +34,7 @@ The dataset contains customer information used for churn analysis and retention 
 | tenure_group | Engineered customer tenure segment |
 | monthly_charge_group | Engineered monthly charge segment |
 | Churn_Encoded | Numerical encoding for churn analysis |
+| risk_score | Churn risk score from 0 to 5, only in `datasets/cleaned/churn_summary.csv`. Customers scoring 5 churn at 69.5% |
 
 ---
 

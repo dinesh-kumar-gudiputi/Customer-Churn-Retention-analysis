@@ -3,5 +3,3 @@ numpy
 matplotlib
 seaborn
 jupyter
-notebook
-powerbi
